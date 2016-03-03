@@ -1,0 +1,59 @@
+function getDataFromSQLDatabase() {
+  // database connection settings
+  var address = '[hostname]';
+  var user = '[username]';
+  var userPwd = '[password]';
+  var db = '[databasename]';
+  
+  // add the sequel and the name of the google sheet (the name in the bottom tab)
+  // all data in the sheet will be deleted during this function
+  var sql = "[THE SQL TO RUN]"; // using double quotes to allow for single quotes in SQL query
+  var sheetName = '[the sheet name]'
+
+  var stmt = conn.createStatement();
+  var results = stmt.executeQuery(sql);
+  var dbUrl = 'jdbc:mysql://' + address + '/' + db;
+  var conn = Jdbc.getConnection(dbUrl, user, userPwd);
+
+  // init output
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  var colTitles = [];
+  var newData = [];
+  var numCols = results.getMetaData().getColumnCount();
+  
+  // clear sheet
+  sheet.clearContents();
+  
+  // get names of columns from SQL and append to sheet
+  for (var i=1;i<=numCols;i++){
+    colTitles.push(results.getMetaData().getColumnLabel(i));
+    Logger.log(results.getMetaData().getColumnLabel(i) );
+  }
+  sheet.appendRow(colTitles);
+
+  // the main loop
+  // loops through each row and adds to 'newData' array
+  while (results.next()) {
+    var rowString = '';
+    var row = []
+    for (var col = 0; col < numCols; col++) {
+      row[col] = results.getString(col+1);
+    }
+    row.push('=VLOOKUP(INDIRECT("U"&row()),ValueSegments!$A$15:$B$17,2,true)');
+    newData.push(row);
+  }
+
+  // newData added to the sheet
+  sheet.getRange(2, 1, newData.length, newData[0].length).setValues(newData);
+
+  // close connections and results
+  results.close();
+  stmt.close();
+
+}
+
+
+
+
+
+
