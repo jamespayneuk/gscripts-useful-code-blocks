@@ -39,7 +39,10 @@ function getDataFromSQLDatabase() {
     for (var col = 0; col < numCols; col++) {
       row[col] = results.getString(col+1);
     }
-    row.push('=VLOOKUP(INDIRECT("U"&row()),ValueSegments!$A$15:$B$17,2,true)');
+    // it's possible to add a new function to the end of a row.
+    // if you need to reference a cell, use indirect() and row()
+    // e.g. the code below adds 1 to the value of cell A1
+    // row.push('INDIRECT("A"&row()) + 1');
     newData.push(row);
   }
 
@@ -51,9 +54,3 @@ function getDataFromSQLDatabase() {
   stmt.close();
 
 }
-
-
-
-
-
-

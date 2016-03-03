@@ -1,0 +1,18 @@
+// Add new menu item to gSheets (to the right of help)
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('[Name of the new menu]')
+      .addItem('First Menu Item', '[name of gScripts function]')
+      menu.addSeparator() // optional separator
+      .addItem('Second Menu Item', '[name of gScripts function]')
+      .addToUi();
+}
+
+// Add new sub-menu to Add-ons menu item.
+function onOpen(e) {
+  var menu = SpreadsheetApp.getUi().createAddonMenu();
+  menu.addItem('First Menu Item', '[name of gScripts function]');
+  menu.addSeparator()
+  menu.addItem('Second Menu Item', '[name of gScripts function]');
+  menu.addToUi();
+}
